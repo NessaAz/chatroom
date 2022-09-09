@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div>
+    {% for room in rooms %}
+        <div>
+            <div>
+                <h5>
+                    {{room.id}} - {{room.name}}
+                </h5>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+            
+{% endblock content %}
