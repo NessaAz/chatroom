@@ -10,8 +10,14 @@ rooms =[
 
 def home(request):
     context = {'rooms':rooms}
-    return render(request, 'home.html', context)
+    return render(request, 'chatapp/home.html', context)
 
-def room(request):
-    return render(request, 'room.html')
+def room(request, pk):
+    room = None
+    for i in rooms:
+        if i['id'] == int(pk):
+            room = i
+   
+    context = {'room':room}
+    return render(request, 'chatapp/room.html', context)
 
