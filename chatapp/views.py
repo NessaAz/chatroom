@@ -1,6 +1,7 @@
 from multiprocessing import context
 from django.shortcuts import render
 from .models import *
+from .forms import *
 
 # rooms =[
 #     {'id':1, 'name': 'intro to data structures'},
@@ -24,5 +25,6 @@ def room(request, pk):
     return render(request, 'chatapp/room.html', context)
 
 def createroom(request):
-    context={}
+    form = RoomForm()
+    context={'form':form}
     return render(request, 'chatapp/room_form.html', context)
