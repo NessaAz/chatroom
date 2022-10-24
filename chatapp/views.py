@@ -1,7 +1,11 @@
 from multiprocessing import context
 from urllib import request
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.db.models import Q
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+
 from .models import *
 from .forms import *
 
@@ -12,6 +16,27 @@ from .forms import *
 #     {'id':3, 'name': 'full stack development'},
 
 # ]
+
+def login_page(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+    try:
+        user = User.objects.get(username=username)
+    except:
+        messages.error(request, 'user does not exist')
+
+    user = authenticate(request, username=username, password=password)
+
+    if user is not None:
+        login(request, user) #creates a session in the browser
+        return redirect('home')
+    else:
+        messages.error(request, 'username or password does not exist')
+
+    context = {}
+    return render(request, 'chatapp/register_login.html', context)
 
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''

@@ -19,19 +19,28 @@
             <!-- NAVBAR -->
             {% include 'nav.html' %}
             <!-- END OF NAVBAR -->
+            {% if messages %}
+            
+            <ul>
+                {% for message in messages %}
+                <li>
+                    {{message}}
+                </li>
+                {% endfor %}
+            </ul>
+
+            {% endif %}
             
             {% block content %}
-            <!-- <i class="fa-solid fa-truck-medical"></i> -->
-            <!-- <i class="fa-solid fa-stretcher"></i> -->
-            <!-- <i class="fa-solid fa-siren"></i> -->
             
             {% endblock content %}
+
             <!-- FOOTER -->
-            <!-- <div class="footer">
+            <div class="footer">
                 <div class="container">
                     <p>Copyright Nessa</p>
                 </div>
-            </div> -->
+            </div>
         
             <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
