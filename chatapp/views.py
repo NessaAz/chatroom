@@ -4,8 +4,8 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db.models import Q
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
-
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from .models import *
 from .forms import *
 
@@ -22,21 +22,29 @@ def login_page(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
 
-    try:
-        user = User.objects.get(username=username)
-    except:
-        messages.error(request, 'user does not exist')
+        try:
+            user = User.objects.get(username=username)
+        except:
+            messages.error(request, 'user does not exist')
 
-    user = authenticate(request, username=username, password=password)
+        user = authenticate(request, username=username, password=password)
 
-    if user is not None:
-        login(request, user) #creates a session in the browser
-        return redirect('home')
-    else:
-        messages.error(request, 'username or password does not exist')
+        if user is not None:
+            login(request, user) #creates a session in the browser
+            return redirect('home')
+        else:
+            messages.error(request, 'username or password does not exist')
 
     context = {}
     return render(request, 'chatapp/register_login.html', context)
+
+
+
+def logout_user(request):
+    logout(request)
+    return redirect('home')
+
+
 
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
@@ -51,6 +59,9 @@ def home(request):
     context = {'rooms':rooms, 'topics':topics, 'room_count':room_count}
     return render(request, 'chatapp/home.html', context)
 
+
+
+
 def room(request, pk):
     # room = None
     # for i in rooms:
@@ -60,6 +71,9 @@ def room(request, pk):
     context = {'room':room}
     return render(request, 'chatapp/room.html', context)
 
+
+
+@login_required(login_url='login')
 def createroom(request):
     form = RoomForm()
     if request.method == 'POST':
@@ -72,6 +86,8 @@ def createroom(request):
 
     context={'form':form}
     return render(request, 'chatapp/room_form.html', context)
+
+
 
 
 def update_room(request, pk):
@@ -87,9 +103,17 @@ def update_room(request, pk):
     context = {'form':form}
     return render(request, 'chatapp/room_form.html', context)
 
+
+
+
+
 def delete_room(request, pk):
     room = Room.objects.get(id=pk)
     if request.method == 'POST':
         room.delete()
         return redirect('home')
     return render(request, 'chatapp/delete.html', {'obj':room})
+
+
+
+
