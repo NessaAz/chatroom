@@ -6,6 +6,8 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+
 from .models import *
 from .forms import *
 
@@ -89,10 +91,13 @@ def createroom(request):
 
 
 
-
+@login_required(login_url='login')
 def update_room(request, pk):
     room = Room.objects.get(id=pk)
     form = RoomForm(instance=room)
+
+    if request.user != room.host:
+        return HttpResponse('You need to login first!')
 
     if request.method == 'POST':
         form = RoomForm(request.POST, instance=room)
@@ -106,9 +111,13 @@ def update_room(request, pk):
 
 
 
-
+@login_required(login_url='login')
 def delete_room(request, pk):
     room = Room.objects.get(id=pk)
+
+    if request.user != room.host:
+        return HttpResponse('You need to login first!')
+        
     if request.method == 'POST':
         room.delete()
         return redirect('home')
