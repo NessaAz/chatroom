@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse
 
 from .models import *
@@ -55,8 +56,12 @@ def logout_user(request):
 
 
 def register_page(request):
-    page = 'register'
-    return render(request, 'chatapp/register_login.html')
+    form = UserCreationForm()
+    
+    return render(request, 'chatapp/register_login.html',
+                  {
+                    'form': form
+                   })
 
 
 def home(request):
