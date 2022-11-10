@@ -4,16 +4,22 @@
 
 <div>
     <form method="POST" action="">
-
         {% csrf_token %}
-
         <label>username:</label>
         <input type="text" name="username" placeholder="username" />
 
         <label>password:</label>
         <input type="password" name="pass" placeholder="password" />
-
         <input type="submit" value="login" />
+    </form>
+</div>
+
+
+<div>
+    <form method="POST" action="">
+
+        {% csrf_token %}
+        <input type="submit" value="Register" />
     </form>
 </div>
 

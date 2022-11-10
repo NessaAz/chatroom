@@ -20,8 +20,9 @@ from .forms import *
 # ]
 
 def login_page(request):
-
-    if request.user.is_authenticated:
+    page = 'login'
+    
+    if request.user.is_authenticated: #prevents multiple loging in
         return redirect('home')
         
     if request.method == "POST":
@@ -36,12 +37,14 @@ def login_page(request):
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
-            login(request, user) #creates a session in the browser
+            login(request, user) #add a session in the db & the browser
             return redirect('home')
         else:
             messages.error(request, 'username or password does not exist')
 
-    context = {}
+    context = {
+        'page': page
+    }
     return render(request, 'chatapp/register_login.html', context)
 
 
@@ -51,13 +54,17 @@ def logout_user(request):
     return redirect('home')
 
 
+def register_page(request):
+    page = 'register'
+    return render(request, 'chatapp/register_login.html')
+
 
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
-    rooms = Room.objects.filter(Q(topic__name__icontains=q)|
+    rooms = Room.objects.filter(
+    Q(topic__name__icontains=q)|
     Q(name__icontains=q)|
-    Q(description__icontains=q)    
-    )
+    Q(description__icontains=q))
 
     topics = Topic.objects.all()
     room_count = rooms.count()
@@ -88,7 +95,6 @@ def createroom(request):
         if form.is_valid():
             form.save()
             return redirect('home')
-
 
     context={'form':form}
     return render(request, 'chatapp/room_form.html', context)
