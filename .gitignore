@@ -1,4 +1,4 @@
 .env
 notes.txt
 *.pyc
-newenv/
+env/
